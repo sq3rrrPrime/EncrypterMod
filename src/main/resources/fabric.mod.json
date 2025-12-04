@@ -1,0 +1,26 @@
+{
+	"schemaVersion": 1,
+	"id": "encrypter",
+	"version": "1.0",
+	"name": "Encrypter",
+	"description": "Encrypts and decrypts messages clientside.",
+	"authors": ["sq3rrr"],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/encrypter/icon.png",
+
+	"environment": "client",
+
+	"entrypoints": {
+		"client": [
+			"com.sq3rrr.encrypter.EncrypterMod"
+		]
+	},
+
+	"depends": {
+		"fabricloader": ">=0.18.1",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
