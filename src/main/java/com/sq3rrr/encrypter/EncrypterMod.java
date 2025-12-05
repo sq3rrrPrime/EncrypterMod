@@ -33,9 +33,15 @@ public class EncrypterMod implements ClientModInitializer {
         if (player != null) {
             player.sendMessage(Text.literal("[EncrypterMod] Version: " + VERSION)
                     .formatted(Formatting.AQUA), false);
-            player.sendMessage(Text.literal("Authors: sq3rrr").formatted(Formatting.YELLOW), false);
-            player.sendMessage(Text.literal("Description: Client-side AES chat encryptor for friends")
+            player.sendMessage(Text.literal("Authors: sq3rrr").formatted(Formatting.AQUA), false);
+            player.sendMessage(Text.literal("Description: Client-side AES chat encryptor.")
                     .formatted(Formatting.GREEN), false);
+            player.sendMessage(Text.literal("Description: Share AES key with friends for secure messaging.")
+                    .formatted(Formatting.GREEN), false);
+            player.sendMessage(Text.literal("Commands: /encrypter encrypt <msg> /encypter decrypt <id>")
+                    .formatted(Formatting.GREEN), false);
+
+
         }
     }
 
