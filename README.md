@@ -1,5 +1,5 @@
 # EncrypterMod v1.0.0
-**Description:** Client-side AES chat encryption for Minecraft. Encrypt messages for friends, send them with a unique ID, and decrypt them with the same key. Fully works on player chat and system chat.
+**Description:** Client-side AES chat encryption for Minecraft. Encrypt messages for friends, send them with a unique ID, and decrypt them with the same key. Fully works on player chat[NotSecure] channel and system chat [SYSTEMCHAT] channel, which most servers have nowdays.
 
 ---
 
