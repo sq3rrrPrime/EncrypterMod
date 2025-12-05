@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>EncrypterMod — Offline AES-GCM Decryptor</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; max-width: 900px; margin: 28px auto; padding: 0 18px; color:#111; }
+    h1 { margin: 0 0 8px; font-size: 20px; }
+    p.lead { margin: 6px 0 18px; color:#444; }
+    textarea, input[type="text"], input[type="password"], select { width:100%; box-sizing:border-box; padding:10px; font-size:14px; margin-top:6px; border-radius:6px; border:1px solid #ddd; }
+    label { display:block; margin-top:12px; font-weight:600; }
+    .row { display:flex; gap:10px; }
+    .col { flex:1; }
+    button { padding:10px 14px; border-radius:8px; border:0; background:#0b6efd; color:white; font-weight:600; cursor:pointer; margin-top:10px; }
+    button.secondary { background:#6c757d; }
+    pre { background:#f6f8fa; padding:12px; border-radius:8px; overflow:auto; white-space:pre-wrap; word-break:break-word; }
+    small.note { color:#666; display:block; margin-top:6px; }
+    footer { margin-top:18px; color:#777; font-size:13px; }
+    .warning { background:#fff4e5; padding:10px;border-radius:6px;border:1px solid #ffd89b; color:#8a5300; margin-top:10px; }
+  </style>
+</head>
+<body>
+  <h1>EncrypterMod — Offline AES-GCM Decryptor</h1>
+  <p class="lead">Paste the encrypted blob from Minecraft (the long gibberish after your <code>[ID: ...]</code>), enter the key, then click <strong>Decrypt</strong>. Everything runs locally in your browser — nothing is uploaded.</p>
+
+  <label>Paste entire chat line or just the encrypted blob</label>
+  <textarea id="inputBlob" rows="3" placeholder="[ID: user_uuid] UzhJ80F89SAjXq2ehrzwPx..."></textarea>
+  <small class="note">You can paste the whole chat line (including the <code>[ID: ...]</code>) — the tool will extract the encrypted part automatically.</small>
+
+  <label>Key format</label>
+  <div class="row" style="align-items:center;">
+    <div class="col">
+      <select id="keyFormat">
+        <option value="text">Raw text key (ASCII) — common for the mod (16/24/32 chars)</option>
+        <option value="base64">Base64 key (decoded to bytes)</option>
+      </select>
+    </div>
+    <div class="col">
+      <input id="keyInput" type="password" placeholder="Paste AES key (raw text or base64 depending on selection)" />
+    </div>
+  </div>
+  <small class="note">If your mod's config has a 32-character key like <code>1234567890abcdef1234567890abcdef</code>, choose <em>Raw text key</em> and paste it.</small>
+
+  <div style="margin-top:8px;">
+    <button id="decryptBtn">Decrypt</button>
+    <button id="extractBtn" class="secondary">Extract encrypted blob</button>
+    <button id="clearBtn" class="secondary">Clear</button>
+  </div>
+
+  <div id="result" style="margin-top:12px; display:none;">
+    <label>Decrypted output</label>
+    <pre id="outText"></pre>
+    <button id="copyBtn">Copy plaintext</button>
+  </div>
+
+  <div id="error" style="margin-top:12px;color:#a00;display:none;"></div>
+
+  <div class="warning" style="margin-top:16px;">
+    <strong>Privacy note:</strong> This page runs offline in your browser. It does <em>not</em> send any data over the network. If opened via <code>file://</code> it still runs locally. Keep your AES key secret — anyone with the key can decrypt your messages.
+  </div>
+
+  <footer>
+    Built for EncrypterMod (AES-GCM, URL-safe Base64). Works in modern browsers (Chrome, Edge, Firefox, Safari). If decrypt fails, check key and that you pasted only the encrypted blob (IV+ct+tag) or the whole chat line.
+  </footer>
+
+<script>
+/*
+  decrypt_encrypter.html
+  - Decodes URL-safe Base64 (no padding)
+  - Extracts first 12 bytes as GCM IV
+  - Feeds remainder to WebCrypto AES-GCM decrypt with given key
+  - Key can be raw text (UTF-8 bytes) or Base64 decoded bytes
+  - No network usage; everything runs in browser memory
+*/
+
+// helper: extract the encrypted token from a pasted chat line if needed
+function extractBlob(text) {
+  // Try to find pattern [ID: ...] <blob>
+  // We'll look for the first long Base64-like token after a bracket
+  let after = text;
+  // If includes [ID:, try to extract part after last ']'
+  let idx = text.indexOf(']');
+  if (idx !== -1) after = text.slice(idx+1);
+  after = after.trim();
+  // If user pasted exactly the blob return it
+  // Remove surrounding angle brackets or quotes
+  after = after.replace(/^<|>$/g, '').trim();
+  // Find the first token that looks like Base64 URL-safe (letters, numbers, -, _)
+  const match = after.match(/([A-Za-z0-9\-_]{8,})/);
+  return match ? match[1] : after;
+}
+
+function urlBase64ToUint8Array(base64Url) {
+  // convert URL-safe -> normal base64
+  let b64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  // add padding
+  while (b64.length % 4 !== 0) b64 += '=';
+  // atob works with normal base64
+  const binary = atob(b64);
+  const len = binary.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+async function importKeyFromString(keyStr, format) {
+  // format: 'text' or 'base64'
+  let keyBytes;
+  if (format === 'text') {
+    // UTF-8 bytes of the string
+    keyBytes = new TextEncoder().encode(keyStr);
+  } else { // base64
+    // accept url-safe base64 or normal base64
+    keyBytes = urlBase64ToUint8Array(keyStr);
+  }
+  // key length must be 16/24/32
+  if (![16,24,32].includes(keyBytes.length)) {
+    throw new Error('Key bytes length must be 16, 24 or 32. Found: ' + keyBytes.length + '. If you have a 32-char text key, pick "Raw text key" and paste it exactly.');
+  }
+  // import as raw AES-GCM key
+  return crypto.subtle.importKey('raw', keyBytes.buffer, {name:'AES-GCM'}, false, ['decrypt']);
+}
+
+async function decryptBlob(encryptedBlob, keyFormat, keyInput) {
+  // encryptedBlob: URL-safe base64 string (no padding)
+  // keyFormat: 'text' or 'base64'
+  // keyInput: string
+  // returns: plaintext string
+
+  // Convert base64 -> bytes
+  const data = urlBase64ToUint8Array(encryptedBlob);
+  if (data.length < 13) throw new Error('Encrypted data too short to contain IV + ciphertext.');
+
+  // first 12 bytes = IV for AES-GCM in your mod
+  const iv = data.slice(0, 12);
+  const ciphertext = data.slice(12); // rest includes tag (GCM tag appended)
+
+  // import key
+  const cryptoKey = await importKeyFromString(keyInput, keyFormat);
+
+  // decrypt
+  const plainBuffer = await crypto.subtle.decrypt(
+    {name: 'AES-GCM', iv: iv, tagLength: 128},
+    cryptoKey,
+    ciphertext.buffer
+  );
+
+  const decoded = new TextDecoder().decode(plainBuffer);
+  return decoded;
+}
+
+// UI wiring
+const inputBlob = document.getElementById('inputBlob');
+const keyInput = document.getElementById('keyInput');
+const keyFormat = document.getElementById('keyFormat');
+const decryptBtn = document.getElementById('decryptBtn');
+const extractBtn = document.getElementById('extractBtn');
+const clearBtn = document.getElementById('clearBtn');
+const outText = document.getElementById('outText');
+const result = document.getElementById('result');
+const error = document.getElementById('error');
+const copyBtn = document.getElementById('copyBtn');
+
+decryptBtn.addEventListener('click', async () => {
+  error.style.display = 'none';
+  result.style.display = 'none';
+  outText.textContent = '';
+  try {
+    const raw = inputBlob.value.trim();
+    if (!raw) throw new Error('Paste the encrypted blob or the chat line first.');
+    const blob = extractBlob(raw);
+    if (!blob) throw new Error('Could not find an encrypted blob in the input. Paste the part after [ID: ...] or the full chat line.');
+    const kfmt = keyFormat.value;
+    const k = keyInput.value.trim();
+    if (!k) throw new Error('Provide the AES key used by the sender.');
+    outText.textContent = 'Decrypting…';
+    result.style.display = 'block';
+    const plain = await decryptBlob(blob, kfmt, k);
+    outText.textContent = plain;
+  } catch (e) {
+    result.style.display = 'none';
+    error.style.display = 'block';
+    error.textContent = 'Error: ' + (e && e.message ? e.message : String(e));
+  }
+});
+
+extractBtn.addEventListener('click', () => {
+  const raw = inputBlob.value.trim();
+  const blob = extractBlob(raw);
+  if (blob) {
+    inputBlob.value = blob;
+    inputBlob.focus();
+  } else {
+    alert('Could not extract. Paste just the encrypted blob (the long token) or the whole chat line.');
+  }
+});
+
+clearBtn.addEventListener('click', () => {
+  inputBlob.value = '';
+  keyInput.value = '';
+  outText.textContent = '';
+  result.style.display = 'none';
+  error.style.display = 'none';
+});
+
+copyBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(outText.textContent);
+    copyBtn.textContent = 'Copied!';
+    setTimeout(()=> copyBtn.textContent = 'Copy plaintext', 1500);
+  } catch {
+    alert('Copy failed — your browser blocked clipboard access. Manually select and copy the text.');
+  }
+});
+</script>
+</body>
+</html>
