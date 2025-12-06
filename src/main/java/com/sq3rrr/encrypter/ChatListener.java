@@ -6,6 +6,8 @@ import net.minecraft.text.Text;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.util.Formatting;
+
 
 public class ChatListener {
 
@@ -45,9 +47,24 @@ public class ChatListener {
         // Notify user
         if (mc.player != null) {
             mc.player.sendMessage(
-                    Text.literal("[EncrypterMod] Message ID detected: " + id),
-                    false
+                    Text.literal("[EncrypterMod] Message ID detected: " + id)
+                            .formatted(net.minecraft.util.Formatting.AQUA),
+                    false // this stays in sendMessage
             );
         }
-    }
-}
+
+
+        // --- AUTO-DECRYPT ---
+        if (ChatHandler.isAutoDecryptEnabled()) {
+            String decrypted = ChatHandler.tryDecrypt(id);
+            if (decrypted != null && mc.player != null) {
+                mc.player.sendMessage(
+                        Text.literal("→ [Decrypted] " + decrypted).formatted(Formatting.AQUA),
+                        false
+                );
+            }
+        }
+
+
+
+    }}
