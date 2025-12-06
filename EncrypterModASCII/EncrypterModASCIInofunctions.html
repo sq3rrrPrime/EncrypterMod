@@ -1,0 +1,180 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EncrypterMod — ASCII Showcase</title>
+  <style>
+    :root{
+      --bg: #000;
+      --panel: #071018;
+      --title-cyan: cyan;
+      --ascii-white: #ffffff;
+      --muted: #99a0a6;
+    }
+
+```
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  background: var(--bg);
+  color:var(--ascii-white);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:36px;
+}
+
+.wrap{
+  width:100%;
+  max-width:1100px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:20px;
+  align-items:start;
+}
+
+header{
+  grid-column: 1 / -1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:6px;
+}
+
+h1{
+  margin:0;
+  font-size:34px;
+  letter-spacing:1px;
+  color:var(--title-cyan);
+  display:flex;
+  gap:12px;
+  align-items:center;
+  font-weight:700;
+  text-shadow: 0 6px 30px rgba(0,255,255,0.06);
+}
+
+.subtitle{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:6px;
+}
+
+.panel{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:12px;
+  padding:18px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.03);
+  overflow:auto;
+  min-height:320px;
+}
+
+.panel strong{ display:block; margin-bottom:10px; color:var(--muted); font-weight:600; font-size:13px; }
+
+pre.ascii{
+  margin:0;
+  padding:14px;
+  background:transparent;
+  border-radius:8px;
+  white-space: pre;
+  overflow:auto;
+  font-size:12px;
+  line-height:12px;
+  color:var(--ascii-white);
+  border:1px dashed rgba(255,255,255,0.06);
+}
+
+footer{
+  grid-column: 1 / -1;
+  margin-top:10px;
+  color:var(--muted);
+  font-size:13px;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  align-items:center;
+}
+
+@media (max-width:880px){
+  .wrap{ grid-template-columns: 1fr; }
+  header{ flex-direction:column; align-items:flex-start; gap:10px; }
+}
+```
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>EncrypterMod</h1>
+        <div class="subtitle">cool ASCII locks for steam — showcase </div>
+      </div>
+      <div style="text-align:right;color:var(--muted);font-size:13px;">
+        EZ AES256 text encryption
+      </div>
+    </header>
+
+```
+<section class="panel" aria-label="Locked ascii">
+  <strong>Locked</strong>
+  <pre class="ascii" id="lockedAscii">   ..................................   
+```
+
+!Y5555555555555555555555555555555555Y?.
+!BGGGGGGGGGGGGGGGGGGGGGGGPPPPPPPPPPPPPGY
+7BGGGGGGGGGGGGGGY7~^^^~7YPGPPPPPPPPPPPG5
+7BGGGGGGGGGGGGJ: :!???!. :YGPPPPPPPPPPG5
+7BGGGGGGGGGGG?  7GGGGGGP7  JGPPPPPPPPGG5
+7BGGGGGGGGGGP. ~GGPPPPPPG! :PPPPPPPPPGG5
+7BGGGGGGGGGGY..JGGGGGGGGG5..5PPPPPPGGGG5
+7BGGGGGGGGGY^^^~~~~~~~~~~~^^^?PPGGGGGGG5
+7BGGGGGGGGG?                 !BGGGGGGGG5
+7BGGPPGGGGG?      .?5J.      !GGGGGGGGG5
+7GPPPGGGPPG7      :P&G:      !GGGGGGGGG5
+7GPPPPPPPPP7       7&Y       !GPPPPPGGG5
+7GPPPPPPPPP!       YBP.      !PPPPPPPPG5
+7GPPPPP555P7       ...       7P5PPPPPPG5
+7GPP555555557^:...........::!55555PPPPG5
+!BP5555555555YYYYYYYYYYYYYY555555555PPGY
+.!YPPP55555555555555555555555555PPPPP5?:
+.^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^.  </pre> </section>
+
+```
+<section class="panel" aria-label="Unlocked ascii">
+  <strong>Unlocked</strong>
+  <pre class="ascii" id="unlockedAscii">   .................................                                                                                 
+```
+
+.?5PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP5Y!
+5#BBBBBBBBBBBBBBBBBBBBBBBGGGGGBBBGGGGB#!
+P############BBBBBBBB#P?^:::::~?GBBBGG#?
+P########BBBBBBBBBBBB7  !Y5P5J^ .JBGGB#?
+P######BBBBBBBBBBBBB7 .5BBBBBBBJ  JBGB#?
+P###BBBBBBBBBBBBBBB5  7BBBBGGGGB7 :GB##?
+P#BBBBBBBBBBBBBBBBBY::5BBGGGGGGG5:^G###?
+P#BBBG^::::::::::::::::~GGGGGGGBBB#####?
+P#BBBP                 :BBBBB##########?
+P#BBBP       JGP!      :BBBBBBB########?
+P#BBBP       ?#B~      :BBBBBBBBBBBBB##?
+PBBBBP       ^#B:      :BBBBBBBBBBBBBB#?
+PBBBB5       !P5~      :GBBBBBBBBBBBBB#?
+PBBBBP:                ~GGGGBBBBBBBBBB#?
+PBBBBBP?!~~~~~~~~~^~~!?PGGGGGGGBBBBBBB#?
+PBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBBB#7
+PYGBBBGGGGGGGGGGGGGGGGGGGGGGGGGBBBB#!
+
+```</pre>
+  </section>
+
+  <footer>
+    <div>secure messaging, stop the Admin stalking!</div>
+  </footer>
+</div>
+</body>
+</html>
+```
