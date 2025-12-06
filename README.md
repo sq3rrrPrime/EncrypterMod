@@ -41,9 +41,13 @@ What to do? On github:
 ---
 # **Important note for AES-key (For mod only, does not affect offline encryption tool)
 As for now every new user will get the same default key when fist launching the mod.
+
+```java
  { JsonObject json = new JsonObject();
             json.addProperty("aes_key", "1234567890abcdef1234567890abcdef");
             }
+```
+
 
 This will be improved in the future.
 
