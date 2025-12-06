@@ -3,6 +3,8 @@ package com.sq3rrr.encrypter;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.minecraft.text.Text;
+import net.minecraft.client.MinecraftClient;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -37,6 +39,23 @@ public class CommandHandler {
                                             })
                                     )
                             )
+                            // --- Auto-decrypt toggle command ---
+                            .then(literal("toggleAutoDecrypt")
+                                    .executes(ctx -> {
+                                        boolean current = ChatHandler.isAutoDecryptEnabled();
+                                        ChatHandler.setAutoDecrypt(!current); // toggle
+
+                                        // Send feedback directly to the client player
+                                        if (MinecraftClient.getInstance().player != null) {
+                                            MinecraftClient.getInstance().player.sendMessage(
+                                                    Text.literal("[EncrypterMod] Auto-decrypt is now " + (!current ? "ON" : "OFF")),
+                                                    false
+                                            );
+                                        }
+                                        return 1;
+                                    })
+                            )
+
             );
         });
     }
