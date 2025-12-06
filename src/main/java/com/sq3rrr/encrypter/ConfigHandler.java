@@ -19,4 +19,6 @@ public class ConfigHandler {
         System.out.println("[ConfigHandler] Saving AES key using KeyConfigHandler...");
         KeyConfigHandler.saveKey(secretKey);
     }
+
+
 }
