@@ -66,5 +66,34 @@ public class ChatHandler {
         storedEncryptedMessages.put(id, new StoredMessage(senderName, encrypted));
     }
 
+    // Try to decrypt a stored message by ID
+    private static boolean autoDecryptEnabled = false; // default ON
+
+    public static void setAutoDecrypt(boolean enabled) {
+        autoDecryptEnabled = enabled;
+    }
+
+    public static boolean isAutoDecryptEnabled() {
+        return autoDecryptEnabled;
+    }
+
+
+
+    public static String tryDecrypt(String id) {
+        StoredMessage stored = storedEncryptedMessages.get(id); // use existing map
+        if (stored == null) return null;
+
+        try {
+            // If your EncryptionUtils.decrypt already handles the key internally,
+            // just call it with the stored encrypted string
+            return EncryptionUtils.decrypt(stored.encrypted);
+        } catch (Exception e) {
+            return null; // decryption failed
+        }
+    }
+
+
+
+
 
 }
