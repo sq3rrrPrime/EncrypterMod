@@ -1,5 +1,5 @@
 # EncrypterMod v1.0.0
-**Description:** Client-side AES chat encryption for Minecraft. Encrypt messages for friends, send them with a unique ID, and decrypt them with the same key. Fully works on player [NotSecure]Chat; channel and system chat [SYSTEM]Chat; channel, which most servers have nowdays. Depends on fabricAPI.
+**Description:** Client-side AES chat encryption for Minecraft. Encrypt messages for friends, send them with a unique ID, and decrypt them with the same key. Fully works on player [NotSecure]Chat; channel and system chat [SYSTEM]Chat; channel, which most servers have nowdays. This mod is depending on fabricAPI.
 
 ---
 
@@ -13,12 +13,13 @@
 * Commands to send, decrypt, and view mod info
 * Fully client-side: no server modification required
 * Optional offline decryption using a Python/HTML tool
+* Provided encryption/decryption tools, they can be used everywhere not just for Minecraft chat.
 
 ---
 # Offline Encryption/Decryption tools fully HTML NO DOWNLOAD OF JAR NEEDED
 
 ## **Offline Decryption Tool (HTML – No install needed)**
-If for some reason you do not want to download the mod to decrypt messages, you can use the Offline html tool privided inside Offline_Decryption_Folder.
+If for some reason you do not want to download the mod to decrypt messages, you can use the Offline html tool privided inside Offline_Decryption_Folder. This also works for any other chat not only Minecraft chat. (whatsapp / steam/ literally anywhere where you can copy paste the encrypted message)
 What to do? On github:
 1. Open Offline_Decryption_Folder.
 2. open decrypter_encrypter file inside the folder.
@@ -30,6 +31,8 @@ What to do? On github:
 
 ---
 ## **Offline Encryption Tool (HTML - No install needed)
+This also works for any other chat not only Minecraft chat. (whatsapp / steam/ literally anywhere where you can copy paste the encrypted message)
+
 1. Open Offline_Encrypter_Folder.
 2. open encrypter_encrypter file inside the folder.
 3. then; you have 2 options now. Option A: Download the full html file (click 3 dots on the top right, download). Option B: Select full code, scan with any maliciousintentscanner, copypasta the code in a empty txt file on your desktop,save the file as .html NOT AS .txt You need to select the option "save as '.*' instead of .txt
@@ -186,8 +189,8 @@ Constantiam.net, anarchy.ac (BANNED;TheBanhammerHasSpoken), Vanilla+(BANNED #ina
 ## Privacy & Safety
 
 * No IPs or sensitive data is tracked.
-* All configuration data (AES-Key) is stored locally. You must always change your key if you feel like you re being insided.
-* If you do not want to download this jar. you can make your own Encryption/Decryption HTML tool (Fully Offline btw zero chance of getting hacked) by first checking the code, then make your OWN html file on PC.
+* All configuration data (AES-Key) is stored locally. You must always change your key after first time launching the mod.
+* If you do not want to download this jar. you can make your own Encryption/Decryption HTML tool (Fully Offline btw zero chance of getting hacked) by first checking the code with any bad-intent scanner on the web, copy code then make your OWN html file on PC -> Copy paste the code from github HTML Encrypter/Decrypter each in a empty .txt file -> save as '.* ' not as .txt -> unplug your internet if you re paranoid (no connection to web means anything you run on your pc cannot be hijacked / no hacker can connect to your pc) -> open your own freshly saved html -> encrypt / decrypt / copy encrypted text -> delete both local html tools and close web -> reconnect to the internet and copy pasta your encrypted message.
 
 ## **License**
 
