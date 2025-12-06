@@ -62,7 +62,7 @@ What to do? On github:
 * `/encrypter decrypt <id>`
   Decrypts a previously received encrypted message stored locally.
 
-* `/encrypter toggleAutoDecrypt
+* `/encrypter toggleAutoDecrypt`
   Auto-Decrypts messages if you you have the same aes key like your friend(group)   
 
 ---
