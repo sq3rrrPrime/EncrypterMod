@@ -36,7 +36,19 @@ What to do? On github:
 4. doubleclick encrypter_encrypter.html it should open the html tool inside your browser. 
 5. Enter; username, shared aes-key >Raw text key (UTF-8) — paste exactly what's in config/key.json< (same as your friends), and your message.
 6. Click on "Encrypt and generate chatline" 
-7. Done -> You can copy paste the ID_username_UUID + Encrypted message in your Minecraft chat now for your friend to decode without downloading the jar.
+7. Done -> You can copy pasta the ID_username_UUID + Encrypted message in your Minecraft chat now for your friend to decode without downloading the jar.
+
+---
+# **Important note for AES-key (For mod only, does not affect offline encryption tool)
+As for now every new user will get the same default key when fist launching the mod.
+  ``` { JsonObject json = new JsonObject();
+            json.addProperty("aes_key", "1234567890abcdef1234567890abcdef");
+            } ```
+
+This will be improved in the future.
+
+### CHANGE KEY IMMEDIATELY!
+The Key HAS to be 32 bits (32 ASCII Character 1 char = 1 bit) make sure your key has 32 letters/numbers/symbols!!!
 
 ## **Installation for the actual Mod**
 
@@ -46,6 +58,7 @@ What to do? On github:
 4. Commands and chat listener are registered on client initialization.
 
 ---
+
 
 ## **Commands**
 
